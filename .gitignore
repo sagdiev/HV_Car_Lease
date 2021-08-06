@@ -1,0 +1,9 @@
+__pycache__
+/.idea
+/data_src
+/data_result
+/data_analytic
+
+/.ipynb_checkpoints/
+/under_constuction/credentials.json
+/under_constuction/quickstart.py
