@@ -24,14 +24,13 @@ def calc_user_utility (user_index, df):
     return rank_user
 
 
+def calc_annuity_payments_company(total_amount_payments, period_payments, percent_payments):
+    annuity = BankInterest(total_amount_payments, period_payments, percent_payments).annuity_calc()
+
+    return annuity
 
 
 
-
-# def calc_annuity_postpayment(total_amount_postpayments, period_postpayments, percent_postpayments):
-#     annuity = BankInterest(total_amount_postpayments, period_postpayments, percent_postpayments).annuity_calc()
-#
-#     return annuity
 #
 # def df_create_cash_flow_client (months_port, clients_portfolio):
 #     columnss = []

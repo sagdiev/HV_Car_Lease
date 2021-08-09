@@ -43,6 +43,9 @@ def random_choice_client_type_pairs(seed):
     return random_choice_by_weight_single(CLIENT_TYPE_BY_SAVING_PAIR, EXPERT_CLIENT_TYPE_BY_SAVING_PAIR_DISTR, seed)
 
 def random_choice_client_type_sign(seed):
+    return 'Toyota RAV'
+
+def random_choice_auto_type_sign(seed):
     return random_choice_by_weight_single(CLIENT_TYPE_BY_SAVING_SIGN, EXPERT_CLIENT_TYPE_BY_SAVING_PAIR_DISTR, seed)
 
 def random_choice_period_saving(client_type, seed):

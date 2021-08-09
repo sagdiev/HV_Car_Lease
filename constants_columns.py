@@ -1,78 +1,58 @@
 
-# Названия Колонок для одного Эксперимента - UNIT - каждая строка = один клиент
+# Названия Колонок для одного Эксперимента - Client - каждая строка = один клиент
 
 column_id_user = 'ID User'
-column_client_type = 'Type'
+# column_client_type = 'Client Type'
+column_auto_type = 'Auto Type'
 
-column_cost_vehicle_client = 'Cost Vehicle Client'
-column_cost_vehicle_company = 'Cost Vehicle Company'
+column_price_auto_client = 'Price Auto Client'
+column_price_auto_company = 'Price Auto Company'
 
-column_period_payments = 'Payments'  # Общий плановый период Выплат
+column_period_payments = 'Period Payments'  # Общий плановый период Выплат
 column_period_payments_start = 'Period Payments Start'  # Номер месяца начала Выплат
+column_period_payments_uplaned_stop = 'Period Payments Uplaned Stop'  # Номер месяца незапланированной остановки
 
+column_payment_monthly = 'Payments Monthly'  # Размер платежа в месяц
+column_prepayment = 'Prepayment'  # Размер Залога
 
-
-column_period_saving = 'Period Saving'  # Общий плановый период накоплений
-column_period_saving_start = 'Period Saving Start'  # Номер месяца начала накоплений
-column_amount_saving_monthly = 'Saving Monthly'  # Накопления в месяц
-column_amount_percent_saving_monthly = 'Percent Monthly'  # Проценты Накопления в месяц
-column_total_amount_saving = 'Saving Total'  # Общая плановая сумма накоплений
-column_accum_amount_saving = 'Saving Accumulated'  # Сумма собранных накоплений
-column_accum_amount_saving_spent = 'Saving Spent'  # Сумма уже израсходованных накоплений
-
-column_prewaiting_period = 'PreWaiting'  # Период фиксированного ожидания
-column_waiting_period = 'Waiting'  # Период ожидания между концом накопления и получением квартиры
-column_waiting_max_status = 'Status Max Waiting'  # Временный Индикатор ожиданни в "красной зоне" после Максимального периода
-
-column_flat_received = 'Is Flat'  # Получена ли Квартира. 1 - получена, 0 - еще нет
-
-column_period_postpayments = 'PostPayments'
-column_period_postpayments_start = 'Period PostPayments Start'  # Номер месяца начала ПостВыплат
-
-column_percent_postpayments = 'Percent PostPayments'
-column_amount_postpayment_monthly = 'Postpayment Monthly'  # Ежемесячный платеж Поствыплат
-
-column_total_amount_postpayments_base = 'PostPayments Total Base'  # База Кредита ПостВыплаты
-column_accum_amount_postpayments = 'Postpayment Accumulated'
-column_total_amount_postpayments = 'PostPayments Total'
-
-column_postpayment_percent_amount_list = 'Annuity PostPayment Percent Amount List'  # Проценты по Аннуитету
-column_credit_base_cover_list = 'Annuity Credit Base Cover'  # Покрываемая Сумма тела Кредита в конкретный месяц
-column_credit_base_list = 'Annuity Credit Base'  # База Кредита ПостПеймента по Аннуитету
-
-column_rank = 'Rank'
 column_client_status = 'Status'
-column_cashflow = 'Unit CashFlow'
+column_rank = 'Rank'
+
+column_cashflow_client_plan = 'CashFlow Client Plan'
+column_cashflow_company_plan = 'CashFlow Company Plan'
+
+column_cashflow_client_fact = 'CashFlow Client Fact'
+column_cashflow_company_fact = 'CashFlow Company Fact'
+
+column_fair_value_auto_client = 'Fair Value Client'
+column_fair_value_aut_company = 'Fair Value Company'
+
+column_accum_payments_amount_client = 'Payments Accumulated Client'  # Накопленные платежи Клиента
+column_accum_payments_amount_company = 'Payments Accumulated Company'  # Накопленные платежи Компания
+
 
 COLUMN_UNIT_NAMES = [
     column_id_user,
-    column_client_type,
-    column_cost_vehicle,
-    column_period_saving,
-    column_period_saving_start,
-    column_amount_saving_monthly,
-    column_total_amount_saving,
-    column_accum_amount_saving,
-    column_accum_amount_saving_spent,
-    column_prewaiting_period,
-    column_waiting_period,
-    column_waiting_max_status,
-    column_flat_received,
-    column_period_postpayments,
-    column_period_postpayments_start,
-    column_percent_postpayments,
-    column_total_amount_postpayments_base,
-    column_amount_postpayment_monthly,
-    column_accum_amount_postpayments,
-    column_total_amount_postpayments,
-    column_rank,
+    # column_client_type,
+    column_auto_type,
+    column_price_auto_client,
+    column_price_auto_company,
+    column_period_payments,
+    column_period_payments_start,
+    column_period_payments_uplaned_stop,
+    column_payment_monthly,
+    column_prepayment,
     column_client_status,
-    column_cashflow,
-    column_postpayment_percent_amount_list,
-    column_credit_base_cover_list,
-    column_credit_base_list]
+    column_rank,
+    column_fair_value_auto_client,
+    column_fair_value_aut_company,
+    column_accum_payments_amount_client,
+    column_accum_payments_amount_company,
+    column_cashflow_client_plan,
+    column_cashflow_company_plan,
+    column_cashflow_client_fact,
+    column_cashflow_company_fact]
 
-column_client_type_plan = 'Type Plan'
 
 # Названия Колонок для одного Эксперимента - UNITS_SUMMARY - каждая строка = один месяц совместного ивестирования
 
