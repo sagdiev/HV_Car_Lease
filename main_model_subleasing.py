@@ -1,11 +1,8 @@
-from datetime import timedelta
-
 import pandas as pd
 import math as m
 import numpy as np
 import matplotlib.pyplot as plt
 from timeit import default_timer as timer
-from dateutil.relativedelta import relativedelta
 import random
 from statistics import mean
 from constants import *
@@ -89,7 +86,6 @@ for j in range(COUNT_EXPERIMENTS):
     for p in range(len(COUNT_SELLS_BY_MONTHS)):  # Перебор всех месяцев продаж
 
         sells_in_period = COUNT_SELLS_BY_MONTHS[p]
-        date_p = DATE_EXPERIMENT_START + relativedelta(months=+p)
         # print(sells_in_period)
         # seed_i = RANDOM_SEED_START
 
@@ -129,7 +125,6 @@ for j in range(COUNT_EXPERIMENTS):
             price_auto_company               = price_auto_client * (1 - DISCOUNT_AUTO_FOR_CONPANY / 100)  # TODO лучше привязать такую скидку к марке автомобиля
             period_payments                 = PERIOD_PAYMENTS  # Общий плановый период Выплат
             period_payments_start           = p  # Номер месяца начала Выплат
-            date_payments_start             = date_p  # Дата начала
             period_payments_uplaned_stop    = 'Period Payments Uplaned Stop'  # Номер месяца незапланированной остановки
 
             payment_monthly                 = DICT_AUTO[auto_type]['payment_monthly']  # Размер платежа в месяц
@@ -140,24 +135,22 @@ for j in range(COUNT_EXPERIMENTS):
 
             cashflow_client_plan            = [prepayment] + [payment_monthly] * ( period_payments - COUNT_PREPAYMENTS )
 
-            cost_prepayment                 = price_auto_company
-            cost_payment_insurance          = price_auto_company * DICT_AUTO[auto_type]['insurance_percent'] / 100  # Первый платеж по Старховке
+            cost_prepayment                 = price_auto_company * 25 / 100
             cost_payment_onboard            = price_auto_company * COST_ONBOARD_PAYMENT_PERCENT / 100
             cost_payment_notary             = price_auto_company * COST_NOTARY_PERCENT / 100
             cost_payment_tax                = price_auto_company * COST_TAX_PERCENT / 100
             cost_payment_bank               = price_auto_company * COST_BANK_FEE_PERCENT / 100
 
-            # annuity_pair                    = calc_annuity_payments_company(price_auto_company,
-            #                                                                 period_payments,
-            #                                                                 BANK_PERCENT_MARKET)
-            # cost_payments_auto_company_monthly      = annuity_pair[0]
-            cost_payments_auto_company_monthly = 0
+            annuity_pair                    = calc_annuity_payments_company(price_auto_company,
+                                                                            period_payments,
+                                                                            BANK_PERCENT_MARKET)
+            cost_payments_auto_company_monthly      = annuity_pair[0]
             # total_amount_postpayments       = annuity_pair[1]
             # postpayment_percent_amount_list = annuity_pair[2]
             # credit_base_cover_list          = annuity_pair[3]
             # credit_base_list                = annuity_pair[4]
             cashflow_company_annuity_plan   = [cost_payments_auto_company_monthly] * 36
-            cost_payment_company_in_first_period    = cost_prepayment + cost_payment_insurance + cost_payment_onboard \
+            cost_payment_company_in_first_period    = cost_prepayment + cost_payment_onboard \
                                                     + cost_payment_notary + cost_payment_tax + cost_payment_bank
 
             cashflow_company_plan           = [cost_payment_company_in_first_period] \
@@ -179,7 +172,6 @@ for j in range(COUNT_EXPERIMENTS):
             df.loc[k, column_price_auto_company]                = price_auto_company
             df.loc[k, column_period_payments]                   = period_payments
             df.loc[k, column_period_payments_start]             = period_payments_start
-            df.loc[k, column_date_payments_start]               = date_payments_start
             df.loc[k, column_period_payments_uplaned_stop]      = period_payments_uplaned_stop
             df.loc[k, column_payment_monthly]                   = payment_monthly
             df.loc[k, column_prepayment]                        = prepayment
@@ -207,10 +199,9 @@ for j in range(COUNT_EXPERIMENTS):
     ### ПОДСЧЕТ ШАГА НА КАЖДОМ МЕСЯЦЕ
     ### ==================================================================================================================================
     cashflow_accum_t = 0
-    cashflow_accum_before_credit_line_t = 0
 
     for t in range(COUNT_MONTHS_OF_CALC):
-        date_t = DATE_EXPERIMENT_START + relativedelta(months=+t)
+
         # todo расчитать максимальное время t!!!!
 
         print('               ')
@@ -222,15 +213,10 @@ for j in range(COUNT_EXPERIMENTS):
 
         cost_payments_t             = 0
         cost_prepayment_t           = 0
-        cost_payment_insurance_t    = 0
         cost_payment_onboard_t      = 0
         cost_payment_notary_t       = 0
         cost_payment_tax_t          = 0
-        cost_payment_bank_deal_t    = 0
-
-        cost_tires_t                = 0
-        cost_tires_fitting_t        = 0
-        cost_TO_t                   = 0
+        cost_payment_bank_deal_t         = 0
 
 
 
@@ -262,18 +248,11 @@ for j in range(COUNT_EXPERIMENTS):
                 income_prepayment_t         += prepayment_i
 
                 cost_payments_t             += 0
-                cost_prepayment_t           += price_auto_company_i
-                cost_payment_insurance_t    += price_auto_company_i * DICT_AUTO[auto_type]['insurance_percent'] / 100
+                cost_prepayment_t           += price_auto_company_i * 25 / 100
                 cost_payment_onboard_t      += price_auto_company_i * COST_ONBOARD_PAYMENT_PERCENT / 100
                 cost_payment_notary_t       += price_auto_company_i * COST_NOTARY_PERCENT / 100
                 cost_payment_tax_t          += price_auto_company_i * COST_TAX_PERCENT / 100
-                cost_payment_bank_deal_t    += price_auto_company_i * COST_BANK_FEE_PERCENT / 100
-
-                cost_tires_t                += 0
-                cost_tires_fitting_t        += 0
-                cost_TO_t                   += 0
-
-
+                cost_payment_bank_deal_t         += price_auto_company_i * COST_BANK_FEE_PERCENT / 100
 
             elif period_payments_start_i in range (t - PERIOD_PAYMENTS, t):
                 # ПОТОЧНЫЙ МЕСЯЦ КЛМЕНТА ==========================================================================================================================
@@ -291,17 +270,10 @@ for j in range(COUNT_EXPERIMENTS):
 
                 cost_payments_t             += cashflow_company_plan_i[t - period_payments_start_i]
                 cost_prepayment_t           += 0
-                cost_payment_insurance_t    += 0
                 cost_payment_onboard_t      += 0
                 cost_payment_notary_t       += 0
                 cost_payment_tax_t          += 0
-                cost_payment_bank_deal_t    += 0
-
-                cost_tires_t                += DICT_AUTO[auto_type]['cost_tires']
-                cost_tires_fitting_t        += DICT_AUTO[auto_type]['cost_tires_fitting']
-                cost_TO_t                   += DICT_AUTO[auto_type]['cost_TO']
-
-
+                cost_payment_bank_deal_t         += 0
 
                 # df_cashflow.loc[t, cf_income_payments] = round(income_payments_t, 0)
                 # df_cashflow.loc[t, cf_income_prepayment] = round(income_prepayment_t, 0)
@@ -321,7 +293,6 @@ for j in range(COUNT_EXPERIMENTS):
 
         cost_buy_payment_t                  = cost_payments_t + \
                                               cost_prepayment_t + \
-                                              cost_payment_insurance_t + \
                                               cost_payment_onboard_t + \
                                               cost_payment_notary_t + \
                                               cost_payment_tax_t + \
@@ -329,38 +300,18 @@ for j in range(COUNT_EXPERIMENTS):
 
         cost_bank_percent_t                 = 0
 
-        cost_services_t = cost_tires_t + cost_tires_fitting_t + cost_TO_t
-
         cost_admin_t                        = COST_ADMIN
         cost_market_t                       = COST_MARKETING_PERCENT
 
         cost_total_t                        = cost_buy_payment_t + \
                                               cost_bank_percent_t + \
-                                              cost_services_t + \
                                               cost_admin_t + \
                                               cost_market_t
 
 
-        cashflow_net_before_credit_line_t                  = income_total_t - cost_total_t
-        cashflow_accum_buttom_before_credit_line_t         = cashflow_accum_t - cost_total_t  # дно остатков
-        cashflow_accum_before_credit_line_t               += cashflow_net_before_credit_line_t
-        print('cashflow_accum_before_credit_line_t = ', cashflow_accum_before_credit_line_t)
-
-        # Подсчет процентов Кредитной линии
-        if cashflow_accum_before_credit_line_t < 0:
-            balance_credit_line_t = - cashflow_accum_before_credit_line_t
-            cost_payment_credit_line_percents_t = balance_credit_line_t * (BANK_CREDIT_LINE_PERCENT / 12) / 100
-
-            print('balance_credit_line_t = ', balance_credit_line_t)
-            print('cost_payment_credit_line_percents_t = ', cost_payment_credit_line_percents_t)
-        else:
-            cost_payment_credit_line_percents_t = 0
-
-        cashflow_net_t              = cashflow_net_before_credit_line_t - cost_payment_credit_line_percents_t
-        cashflow_accum_buttom_t     = cashflow_accum_buttom_before_credit_line_t - cost_payment_credit_line_percents_t  # дно остатков
-        cashflow_accum_t            = cashflow_accum_before_credit_line_t - cost_payment_credit_line_percents_t
-        print('cashflow_accum_t = ', cashflow_accum_t)
-
+        cashflow_net_t                  = income_total_t - cost_total_t
+        cashflow_accum_buttom_t         = cashflow_accum_t - cost_total_t  # дно остатков
+        cashflow_accum_t               += cashflow_net_t
 #
 #
 #         profitloss_income_total_t       = income_postpayments_percent_t + \
@@ -382,28 +333,17 @@ for j in range(COUNT_EXPERIMENTS):
 #
 
         df_cashflow.loc[t, cf_period]                               = round(t, 0)
-        df_cashflow.loc[t, cf_date]                                 = date_t
 
         df_cashflow.loc[t, cf_income_client]                        = round(income_client_t, 0)
-        df_cashflow.loc[t, cf_income_payments]                      = round(income_payments_t, 0)
-        df_cashflow.loc[t, cf_income_prepayment]                    = round(income_prepayment_t, 0)
         df_cashflow.loc[t, cf_income_add]                           = round(income_add_t, 0)
         df_cashflow.loc[t, cf_income_total]                         = round(income_total_t, 0)
 
         df_cashflow.loc[t, cf_cost_payments]                        = round(-cost_payments_t, 0)
         df_cashflow.loc[t, cf_cost_prepayment]                      = round(-cost_prepayment_t, 0)
-        df_cashflow.loc[t, cf_cost_payment_insurance]               = round(-cost_payment_insurance_t, 0)
         df_cashflow.loc[t, cf_cost_payment_onboard]                 = round(-cost_payment_onboard_t, 0)
         df_cashflow.loc[t, cf_cost_payment_notary]                  = round(-cost_payment_notary_t, 0)
         df_cashflow.loc[t, cf_cost_payment_tax]                     = round(-cost_payment_tax_t, 0)
         df_cashflow.loc[t, cf_cost_payment_bank_deal]               = round(-cost_payment_bank_deal_t, 0)
-        df_cashflow.loc[t, cf_cost_payment_credit_line_percents]    = round(-cost_payment_credit_line_percents_t, 0)
-
-        df_cashflow.loc[t, cf_cost_tires] = round(-cost_tires_t, 0)
-        df_cashflow.loc[t, cf_cost_tires_fitting] = round(-cost_tires_fitting_t, 0)
-        df_cashflow.loc[t, cf_cost_TO] = round(-cost_TO_t, 0)
-
-
         df_cashflow.loc[t, cf_cost_admin]                           = round(-cost_admin_t, 0)
         df_cashflow.loc[t, cf_cost_market]                          = round(-cost_market_t, 0)
 
@@ -422,9 +362,8 @@ for j in range(COUNT_EXPERIMENTS):
 #         df_cashflow.loc[t, pl_expenses_total_acc]                   = round(-profitloss_expenses_total_acc, 0)
 #         df_cashflow.loc[t, pl_profit_net_acc]                       = round(profitloss_profit_net_acc, 0)
 
-
-        df_cashflow.loc[t, bl_credit_line]                          = round(balance_credit_line_t, 0)
-
+        df_cashflow.loc[t, cf_income_payments]                      = round(income_payments_t, 0)
+        df_cashflow.loc[t, cf_income_prepayment]                    = round(income_prepayment_t, 0)
 
         df_cashflow.describe()
 #
@@ -458,7 +397,7 @@ for j in range(COUNT_EXPERIMENTS):
 
     # Подведение РЕЗУЛЬТАТОВ одного ЭКСПЕРИМЕНТА
     ### ==================================================================================================================================
-    # print(df.to_string())
+    print(df.to_string())
 #     print(df_summary.to_string())
     print(df_cashflow.to_string())
 #     print(df_cashflow.sum())

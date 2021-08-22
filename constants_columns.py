@@ -10,6 +10,7 @@ column_price_auto_company = 'Price Auto Company'
 
 column_period_payments = 'Period Payments'  # Общий плановый период Выплат
 column_period_payments_start = 'Period Payments Start'  # Номер месяца начала Выплат
+column_date_payments_start = 'Date Payments Start' # Дата начала Выплат (начало месяца)
 column_period_payments_uplaned_stop = 'Period Payments Uplaned Stop'  # Номер месяца незапланированной остановки
 
 column_payment_monthly = 'Payments Monthly'  # Размер платежа в месяц
@@ -39,6 +40,7 @@ COLUMN_UNIT_NAMES = [
     column_price_auto_company,
     column_period_payments,
     column_period_payments_start,
+    column_date_payments_start,
     column_period_payments_uplaned_stop,
     column_payment_monthly,
     column_prepayment,
