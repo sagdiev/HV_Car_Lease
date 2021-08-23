@@ -9,9 +9,9 @@ column_price_auto_client = 'Price Auto Client'
 column_price_auto_company = 'Price Auto Company'
 
 column_period_payments = 'Period Payments'  # Общий плановый период Выплат
-column_period_payments_start = 'Period Payments Start'  # Номер месяца начала Выплат
-column_date_payments_start = 'Date Payments Start' # Дата начала Выплат (начало месяца)
-column_period_payments_uplaned_stop = 'Period Payments Uplaned Stop'  # Номер месяца незапланированной остановки
+column_period_start = 'Period Start'  # Номер месяца начала Выплат
+column_date_start = 'Date Start' # Дата начала Выплат (начало месяца)
+column_period_uplaned_stop = 'Period Payments Uplaned Stop'  # Номер месяца незапланированной остановки
 
 column_payment_monthly = 'Payments Monthly'  # Размер платежа в месяц
 column_prepayment = 'Prepayment'  # Размер Залога
@@ -31,6 +31,11 @@ column_fair_value_aut_company = 'Fair Value Company'
 column_accum_payments_amount_client = 'Payments Accumulated Client'  # Накопленные платежи Клиента
 column_accum_payments_amount_company = 'Payments Accumulated Company'  # Накопленные платежи Компания
 
+column_period_insurance_list = 'Period Insurance List'  # Номер месяца выплат Страховки
+column_period_tires_buy = 'Period Tires Buy'  # Номер месяца покупки Зимней резины
+column_period_tires_fitting_list = 'Period Tires Fitting List'  # Номер месяца Шиномонтажа
+column_period_TO_list = 'Period TO List'  # Номер месяца ТО
+
 
 COLUMN_UNIT_NAMES = [
     column_id_user,
@@ -39,9 +44,9 @@ COLUMN_UNIT_NAMES = [
     column_price_auto_client,
     column_price_auto_company,
     column_period_payments,
-    column_period_payments_start,
-    column_date_payments_start,
-    column_period_payments_uplaned_stop,
+    column_period_start,
+    column_date_start,
+    column_period_uplaned_stop,
     column_payment_monthly,
     column_prepayment,
     column_client_status,
@@ -53,7 +58,11 @@ COLUMN_UNIT_NAMES = [
     column_cashflow_client_plan,
     column_cashflow_company_plan,
     column_cashflow_client_fact,
-    column_cashflow_company_fact]
+    column_cashflow_company_fact,
+    column_period_insurance_list,
+    column_period_tires_buy,
+    column_period_tires_fitting_list,
+    column_period_TO_list]
 
 
 # Названия Колонок для одного Эксперимента - UNITS_SUMMARY - каждая строка = один месяц совместного ивестирования

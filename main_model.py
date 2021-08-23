@@ -128,9 +128,9 @@ for j in range(COUNT_EXPERIMENTS):
             price_auto_client                = DICT_AUTO[auto_type]['price']
             price_auto_company               = price_auto_client * (1 - DISCOUNT_AUTO_FOR_CONPANY / 100)  # TODO лучше привязать такую скидку к марке автомобиля
             period_payments                 = PERIOD_PAYMENTS  # Общий плановый период Выплат
-            period_payments_start           = p  # Номер месяца начала Выплат
-            date_payments_start             = date_p  # Дата начала
-            period_payments_uplaned_stop    = 'Period Payments Uplaned Stop'  # Номер месяца незапланированной остановки
+            period_start           = p  # Номер месяца начала Выплат
+            date_start             = date_p  # Дата начала
+            period_uplaned_stop    = 'Period Payments Uplaned Stop'  # Номер месяца незапланированной остановки
 
             payment_monthly                 = DICT_AUTO[auto_type]['payment_monthly']  # Размер платежа в месяц
             prepayment                      = payment_monthly * COUNT_PREPAYMENTS  # Размер Залога
@@ -172,15 +172,86 @@ for j in range(COUNT_EXPERIMENTS):
             accum_payments_amount_client    = 0  # Накопленные платежи Клиента
             accum_payments_amount_company   = 0  # Накопленные платежи Компания
 
+            ### Блок определения Дат Дополнительных Затрат на Авто
+            ### ===============================================
+            date_start.month
+            print(' period_start = ', period_start)
+            print(' date_start.month = ',  date_start.month)
+
+            period_insurance_list = [period_start, period_start + 12, period_start + 24]
+            print(' period_insurance_list = ', period_insurance_list)
+
+            if date_start.month in [3, 4, 5, 6, 7, 8, 9]:
+                period_tires_buy = period_start + 10 - date_start.month  # в 10-м месяце
+            else:  # то есть date_start.month in [10, 11, 12, 1, 2]
+                period_tires_buy = period_start  # в начальном месяце
+            print(' period_tires_buy = ', period_tires_buy)
+
+            if date_start.month in [4, 5, 6, 7, 8, 9]:
+                period_tires_fitting_winter_first   = period_start + 10 - date_start.month
+                period_tires_fitting_spring_first   = period_tires_fitting_winter_first + 5
+                period_tires_fitting_list = [period_tires_fitting_winter_first,
+                                             period_tires_fitting_spring_first,
+                                             period_tires_fitting_winter_first + 12,
+                                             period_tires_fitting_spring_first + 12,
+                                             period_tires_fitting_winter_first + 24,
+                                             period_tires_fitting_spring_first + 24]
+            elif date_start.month in [3]:
+                period_tires_fitting_winter_first   = period_start + 10 - date_start.month
+                period_tires_fitting_spring_first   = period_tires_fitting_winter_first + 5
+                period_tires_fitting_list = [period_tires_fitting_winter_first,
+                                             period_tires_fitting_spring_first,
+                                             period_tires_fitting_winter_first + 12,
+                                             period_tires_fitting_spring_first + 12,
+                                             period_tires_fitting_winter_first + 24]
+            elif date_start.month in [10]:
+                period_tires_fitting_winter_first   = period_start
+                period_tires_fitting_spring_first   = period_start + 3 + 12 - date_start.month
+                period_tires_fitting_winter_two     = period_start + 10 + 12 - date_start.month
+                period_tires_fitting_list = [period_tires_fitting_winter_first,
+                                             period_tires_fitting_spring_first,
+                                             period_tires_fitting_winter_two,
+                                             period_tires_fitting_spring_first + 12,
+                                             period_tires_fitting_winter_two + 12,
+                                             period_tires_fitting_spring_first + 24]
+            elif date_start.month in [11, 12]:
+                period_tires_fitting_winter_first = period_start
+                period_tires_fitting_spring_first = period_start + 3 + 12 - date_start.month
+                period_tires_fitting_winter_two = period_start + 10 + 12 - date_start.month
+                period_tires_fitting_list = [period_tires_fitting_winter_first,
+                                             period_tires_fitting_spring_first,
+                                             period_tires_fitting_winter_two,
+                                             period_tires_fitting_spring_first + 12,
+                                             period_tires_fitting_winter_two + 12,
+                                             period_tires_fitting_spring_first + 24,
+                                             period_tires_fitting_winter_two + 24]
+            elif date_start.month in [1, 2]:
+                period_tires_fitting_winter_first   = period_start
+                period_tires_fitting_spring_first   = period_start + 3 - date_start.month
+                period_tires_fitting_winter_two     = period_start + 10 - date_start.month
+                period_tires_fitting_list = [period_tires_fitting_winter_first,
+                                             period_tires_fitting_spring_first,
+                                             period_tires_fitting_winter_two,
+                                             period_tires_fitting_spring_first + 12,
+                                             period_tires_fitting_winter_two + 12,
+                                             period_tires_fitting_spring_first + 24,
+                                             period_tires_fitting_winter_two + 24]
+            print(' period_tires_fitting_list = ', period_tires_fitting_list)
+
+            period_TO_list = [period_start +  6 - 1, period_start + 12 - 1,
+                              period_start + 18 - 1, period_start + 24 - 1,
+                              period_start + 30 - 1, period_start + 36 - 1]
+            print(' period_TO_list = ', period_TO_list)
+
 
             df.loc[k, column_id_user]                           = id_user
             df.loc[k, column_auto_type]                         = auto_type
             df.loc[k, column_price_auto_client]                 = price_auto_client
             df.loc[k, column_price_auto_company]                = price_auto_company
             df.loc[k, column_period_payments]                   = period_payments
-            df.loc[k, column_period_payments_start]             = period_payments_start
-            df.loc[k, column_date_payments_start]               = date_payments_start
-            df.loc[k, column_period_payments_uplaned_stop]      = period_payments_uplaned_stop
+            df.loc[k, column_period_start]                      = period_start
+            df.loc[k, column_date_start]                        = date_start
+            df.loc[k, column_period_uplaned_stop]               = period_uplaned_stop
             df.loc[k, column_payment_monthly]                   = payment_monthly
             df.loc[k, column_prepayment]                        = prepayment
             df.loc[k, column_client_status]                     = client_status
@@ -194,12 +265,19 @@ for j in range(COUNT_EXPERIMENTS):
             df.loc[k, column_accum_payments_amount_client]      = accum_payments_amount_client
             df.loc[k, column_accum_payments_amount_company]     = accum_payments_amount_company
 
+            df.loc[k, column_period_insurance_list]             = period_insurance_list
+            df.loc[k, column_period_tires_buy]                  = period_tires_buy
+            df.loc[k, column_period_tires_fitting_list]         = period_tires_fitting_list
+            df.loc[k, column_period_TO_list]                    = period_TO_list
+
             id_user += 1
             k += 1
             print('exp', j+1, 'unit', k, 'param:', client_status, auto_type, price_auto_client,
-                  '| period_payments', period_payments, 'start', period_payments_start, 'payment_monthly', payment_monthly)
+                  '| period_payments', period_payments, 'start', period_start, 'payment_monthly', payment_monthly)
 
-    print(df.to_string())
+    # print(df.to_string())
+    print(df.head().to_string())
+    print(df.tail().to_string())
 
 
 
@@ -233,19 +311,15 @@ for j in range(COUNT_EXPERIMENTS):
         cost_TO_t                   = 0
 
 
-
-
-
-
         for i in range(COUNT_SELLS):
             # print('i = ', i)
 
-            period_payments_start_i         = df[column_period_payments_start][i]
+            period_start_i         = df[column_period_start][i]
 
             # _i = df[column_][i]
 
 
-            if period_payments_start_i == t:
+            if period_start_i == t:
                 # ВЫДАЧА АВТО ==========================================================================================================================
                 ### ==================================================================================================================================
                 id_user_i                   = df[column_id_user][i]
@@ -253,6 +327,11 @@ for j in range(COUNT_EXPERIMENTS):
                 price_auto_client_i         = df[column_price_auto_client][i]
                 price_auto_company_i        = df[column_price_auto_company][i]
                 prepayment_i                = df[column_prepayment][i]
+
+                period_insurance_list_i         = df[column_period_insurance_list][i]
+                period_tires_buy_i              = df[column_period_tires_buy][i]
+                period_tires_fitting_list_i     = df[column_period_tires_fitting_list][i]
+                period_TO_list_i                = df[column_period_TO_list][i]
 
                 # print('START id_user_i = ', id_user_i)
                 # print('price_auto_client_i = ', price_auto_client_i)
@@ -263,45 +342,68 @@ for j in range(COUNT_EXPERIMENTS):
 
                 cost_payments_t             += 0
                 cost_prepayment_t           += price_auto_company_i
-                cost_payment_insurance_t    += price_auto_company_i * DICT_AUTO[auto_type]['insurance_percent'] / 100
+                # cost_payment_insurance_t    += price_auto_company_i * DICT_AUTO[auto_type]['insurance_percent'] / 100
                 cost_payment_onboard_t      += price_auto_company_i * COST_ONBOARD_PAYMENT_PERCENT / 100
                 cost_payment_notary_t       += price_auto_company_i * COST_NOTARY_PERCENT / 100
                 cost_payment_tax_t          += price_auto_company_i * COST_TAX_PERCENT / 100
                 cost_payment_bank_deal_t    += price_auto_company_i * COST_BANK_FEE_PERCENT / 100
+                #
+                # cost_tires_t                += 0
+                # cost_tires_fitting_t        += 0
+                # cost_TO_t                   += 0
 
-                cost_tires_t                += 0
-                cost_tires_fitting_t        += 0
-                cost_TO_t                   += 0
+                cost_payment_insurance_t += price_auto_company_i * DICT_AUTO[auto_type]['insurance_percent'] / 100 \
+                    if t in period_insurance_list_i else 0
+                cost_tires_t += DICT_AUTO[auto_type]['cost_tires'] \
+                    if t == period_tires_buy_i else 0
+                cost_tires_fitting_t += DICT_AUTO[auto_type]['cost_tires_fitting'] \
+                    if t in period_tires_fitting_list_i else 0
+                cost_TO_t += DICT_AUTO[auto_type]['cost_TO_all'] / len(period_TO_list_i) \
+                    if t in period_TO_list_i else 0
 
-
-
-            elif period_payments_start_i in range (t - PERIOD_PAYMENTS, t):
+            elif period_start_i in range (t - PERIOD_PAYMENTS, t):
                 # ПОТОЧНЫЙ МЕСЯЦ КЛМЕНТА ==========================================================================================================================
                 ### ==================================================================================================================================
-                id_user_i                   = df[column_id_user][i]
-                client_status_i             = df[column_client_status][i]
-                price_auto_client_i         = df[column_price_auto_client][i]
-                price_auto_company_i        = df[column_price_auto_company][i]
-                payment_monthly_i           = df[column_payment_monthly][i]
-                cashflow_company_plan_i     = df[column_cashflow_company_plan][i]
+                id_user_i                       = df[column_id_user][i]
+                client_status_i                 = df[column_client_status][i]
+                price_auto_client_i             = df[column_price_auto_client][i]
+                price_auto_company_i            = df[column_price_auto_company][i]
+                payment_monthly_i               = df[column_payment_monthly][i]
+                cashflow_company_plan_i         = df[column_cashflow_company_plan][i]
+
+                period_insurance_list_i         = df[column_period_insurance_list][i]
+                period_tires_buy_i              = df[column_period_tires_buy][i]
+                period_tires_fitting_list_i     = df[column_period_tires_fitting_list][i]
+                period_TO_list_i                = df[column_period_TO_list][i]
+
 
                 # Расчет Deal income и cost - поступления и затрат при оформлении Клиенту Лизинга
-                income_payments_t           += payment_monthly_i
-                income_prepayment_t         += 0
+                income_payments_t               += payment_monthly_i if t - period_start_i <= PERIOD_PAYMENTS - COUNT_PREPAYMENTS else 0
+                income_prepayment_t             += 0
 
-                cost_payments_t             += cashflow_company_plan_i[t - period_payments_start_i]
-                cost_prepayment_t           += 0
-                cost_payment_insurance_t    += 0
-                cost_payment_onboard_t      += 0
-                cost_payment_notary_t       += 0
-                cost_payment_tax_t          += 0
-                cost_payment_bank_deal_t    += 0
-
-                cost_tires_t                += DICT_AUTO[auto_type]['cost_tires']
-                cost_tires_fitting_t        += DICT_AUTO[auto_type]['cost_tires_fitting']
-                cost_TO_t                   += DICT_AUTO[auto_type]['cost_TO']
+                cost_payments_t                 += cashflow_company_plan_i[t - period_start_i]
+                cost_prepayment_t               += 0
+                # cost_payment_insurance_t        += 0
+                cost_payment_onboard_t          += 0
+                cost_payment_notary_t           += 0
+                cost_payment_tax_t              += 0
+                cost_payment_bank_deal_t        += 0
 
 
+                cost_payment_insurance_t    += price_auto_company_i * DICT_AUTO[auto_type]['insurance_percent'] / 100 \
+                                                   if t in period_insurance_list_i else 0
+                cost_tires_t                += DICT_AUTO[auto_type]['cost_tires'] \
+                                                   if t == period_tires_buy_i else 0
+                cost_tires_fitting_t        += DICT_AUTO[auto_type]['cost_tires_fitting'] \
+                                                   if t in period_tires_fitting_list_i else 0
+                cost_TO_t                   += DICT_AUTO[auto_type]['cost_TO_all'] / len(period_TO_list_i) \
+                                                   if t in period_TO_list_i else 0
+
+
+                # period_insurance_list_i         = df[column_period_insurance_list][i]
+                # period_tires_buy_i              = df[column_period_tires_buy][i]
+                # period_tires_fitting_list_i     = df[column_period_tires_fitting_list][i]
+                # period_TO_list_i                = df[column_period_TO_list][i]
 
                 # df_cashflow.loc[t, cf_income_payments] = round(income_payments_t, 0)
                 # df_cashflow.loc[t, cf_income_prepayment] = round(income_prepayment_t, 0)
